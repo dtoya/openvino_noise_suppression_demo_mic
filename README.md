@@ -20,13 +20,13 @@ omz_downloader --name noise-suppression-poconetlike-0001
 ```
 
 ## Test
-Case 1: Use audio file.
+### Case 1: Use audio file.
 ```
 wget https://assets.amazon.science/ef/0b/234f82204da385f4893a150d7e34/sample01-orig.wav
 python noise_suppression_demo_mic.py -m intel/noise-suppression-poconetlike-0001/FP32/noise-suppression-poconetlike-0001.xml -i sample01-orig.wav -o sample01-output.wav
 ```
 
-Case 2: Use sound input/output devices.  
+### Case 2: Use sound input/output devices.  
 1. Dump index of audio device by using -l option.
 ```
 python noise_suppression_demo_mic.py -m intel/noise-suppression-poconetlike-0001/FP32/noise-suppression-poconetlike-0001.xml -l 
@@ -64,7 +64,8 @@ Options:
                         Optional. Recording time [sec]
   -l, --list_device     Optional. show a list of audio device
 ```
-> Note:
+
+> **Note**
 > * OpenVINO API 2.0 is used. Inference Engine API is not supported. 
 > * Not support noise-suppression-denseunet-ll-0001
 
