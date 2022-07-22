@@ -16,6 +16,7 @@ pip install -r requirements.txt
 
 ### Download Pre-trained Model
 ```
+pip install openvino-dev
 omz_downloader --name noise-suppression-poconetlike-0001 
 ```
 
@@ -24,6 +25,7 @@ omz_downloader --name noise-suppression-poconetlike-0001
 ```
 wget https://assets.amazon.science/ef/0b/234f82204da385f4893a150d7e34/sample01-orig.wav
 python noise_suppression_demo_mic.py -m intel/noise-suppression-poconetlike-0001/FP32/noise-suppression-poconetlike-0001.xml -i sample01-orig.wav -o sample01-output.wav
+aplay -D plughw:2,0 sample01-output.wav
 ```
 
 ### Case 2: Use sound input/output devices.  
@@ -68,4 +70,5 @@ Options:
 > **Note**
 > * OpenVINO API 2.0 is used. Inference Engine API is not supported. 
 > * Not support noise-suppression-denseunet-ll-0001
+
 
