@@ -31,7 +31,7 @@ aplay -D plughw:2,0 sample01-output.wav
 ### Case 2: Use sound input/output devices.  
 1. Dump index of audio device by using -l option.
 ```
-python noise_suppression_demo_mic.py -m intel/noise-suppression-poconetlike-0001/FP32/noise-suppression-poconetlike-0001.xml -l 
+python noise_suppression_demo_mic.py -l 
 ```
 2. Pick up index numbers for mic and speaker devices in output message of the above command.
 ```
