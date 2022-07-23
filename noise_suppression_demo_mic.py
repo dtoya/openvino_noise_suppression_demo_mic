@@ -34,16 +34,10 @@ def build_argparser():
     parser = ArgumentParser(add_help=False)
     args = parser.add_argument_group('Options')
     args.add_argument('-h', '--help', action='help', default=SUPPRESS, help='Show this help message and exit.')
-    args.add_argument("-m", "--model", help="Required. Path to an .xml file with a trained model",
-                      required=True, type=Path)
-    args.add_argument("-i", "--input", help="Optional. Path to a 16kHz wav file with speech+noise",
-                      required=False, type=str)
-    args.add_argument("-o", "--output", help="Optional. Path to output wav file for cleaned speech",
-                      required=False, type=str)
-    args.add_argument("-d", "--device",
-                      help="Optional. Target device to perform inference on. "
-                           "Default value is CPU",
-                      default="CPU", type=str)
+    args.add_argument("-m", "--model", help="Required. Path to an .xml file with a trained model", required=False, type=Path)
+    args.add_argument("-i", "--input", help="Optional. Path to a 16kHz wav file with speech+noise", required=False, type=str)
+    args.add_argument("-o", "--output", help="Optional. Path to output wav file for cleaned speech", required=False, type=str)
+    args.add_argument("-d", "--device", help="Optional. Target device to perform inference on. Default value is CPU", default="CPU", type=str)
     args.add_argument("--device_input", required=False, type=int, help="Optional. device id for input")
     args.add_argument("--device_output", required=False, type=int, help="Optional. device id for output")
     args.add_argument("--skip_infer", required=False, action='store_true', default=False, help="Optional. skip inference")
@@ -77,6 +71,13 @@ def wav_write(wav_name, x):
 def main():
     log.basicConfig(format="[ %(levelname)s ] %(message)s", level=log.INFO, stream=sys.stdout)
     args = build_argparser().parse_args()
+
+    audio = pyaudio.PyAudio()
+    if args.list_device:
+        for i in range(audio.get_device_count()):
+            print("[Audio Device List]")
+            print(audio.get_device_info_by_index(i))
+        sys.exit(0)
 
     log.info("Initializing Inference Engine")
     core = Core() 
@@ -112,17 +113,6 @@ def main():
     input_size = inp_shapes["input"][1]
     res = None
 
-    # Setting for PyAudio
-    fmt = pyaudio.paInt16  
-    ch = 1              
-    sampling_rate = 16000 
-    chunk = 2**11   # 2048
-    audio = pyaudio.PyAudio()
-    if args.list_device:
-        for i in range(audio.get_device_count()):
-            print(audio.get_device_info_by_index(i))
-        sys.exit(0)
-
     index_in = None
     index_out = None
     if args.device_input: 
@@ -140,6 +130,10 @@ def main():
         if not args.output:
             args.output = "noise_suppression_demo_out.wav"
 
+    fmt = pyaudio.paInt16  
+    ch = 1              
+    sampling_rate = 16000 
+    chunk = 2**11   # 2048
     if args.device_input:  
         stream = audio.open(format=fmt, channels=ch, rate=sampling_rate, input=True, input_device_index = index_in, frames_per_buffer=chunk)
     if args.device_output:
